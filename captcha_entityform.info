@@ -1,0 +1,5 @@
+name = CAPTCHA Entityform
+description = Adds options for entityforms in the CAPTCHA config form
+dependencies[] = captcha
+dependencies[] = entityform
+core = 7.x

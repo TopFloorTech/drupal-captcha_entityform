@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file captcha_entityform.module
+ * TODO: Enter file description here.
+ */
+
+
+/**
+ * Implements hook_flush_caches().
+ */
+function captcha_entityform_flush_caches() {
+  _captcha_entityform_update_captcha_points();
+}
+
+function _captcha_entityform_update_captcha_points(){
+  $entityforms = entity_get_info("entityform");
+  $result = db_select('captcha_points','cp')
+    ->fields('cp')
+    ->execute()
+    ->fetchAllAssoc('form_id');
+
+  foreach($entityforms['bundles'] as $bundle_name => $bundle){
+    $entityform_bundle = $bundle_name . '_entityform_edit_form';
+    if(!isset($result[$entityform_bundle])){
+      db_insert('captcha_points')
+        ->fields(array(
+            'form_id' => $entityform_bundle,
+            'module' => NULL,
+            'captcha_type' => NULL,
+          ))
+        ->execute();
+    }
+  }
+}
